@@ -5,7 +5,6 @@ import Post from '../../components/Post/Post';
 import FullPost from '../../components/FullPost/FullPost';
 import NewPost from '../../components/NewPost/NewPost';
 import './Blog.css';
-import post from '../../components/Post/Post';
 
 class Blog extends Component {
     state = {
@@ -15,8 +14,17 @@ class Blog extends Component {
     componentDidMount() {
         axios.get("https://jsonplaceholder.typicode.com/posts")
             .then(response => {
-                this.setState({posts: response.data});
-                console.log(this.state.posts)
+                // limit response to 4
+                const posts = response.data.slice(0, 4);
+                // add author property to each (hardcoded for now)
+                const updatedPosts = posts.map(post => {
+                    return {
+                        ...post,
+                        author: "Jack"
+                    }
+                });
+                this.setState({posts: updatedPosts});
+                // console.log(this.state.posts)
             })
     }
 
@@ -25,6 +33,7 @@ class Blog extends Component {
             return <Post 
                 key={post.id}
                 title={post.title}
+                author={post.author}
                 />
         });
 
